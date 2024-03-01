@@ -1,0 +1,14 @@
+{
+  "locofyConfig": {
+    "project": "Collaboard",
+    "id": "65e13e3e4e08b0ea217fd1fc",
+    "framework": "react-nextjs",
+    "typescript": true,
+    "styling": "Tailwind",
+    "unit": "rem",
+    "naming": "Kebab Case",
+    "path": "public/",
+    "componentsPath": "c:\\Users\\pater\\Desktop\\CollaboardV2\\src\\components",
+    "screensPath": "c:\\Users\\pater\\Desktop\\CollaboardV2\\src\\pages"
+  }
+}
