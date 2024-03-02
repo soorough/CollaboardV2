@@ -8,23 +8,27 @@ module.exports = {
     extend: {
       colors: {
         white: "#fff",
+        gray: "#2a2a2a",
+        cornflowerblue: "#85b6ff",
         black: "#000",
         dimgray: "#454264",
         gainsboro: "#d9d9d9",
-        gray: "#2a2a2a",
       },
       spacing: {},
       fontFamily: {
+        "josefin-sans": "'Josefin Sans'",
         lacquer: "Lacquer",
         "long-cang": "'Long Cang'",
         "londrina-shadow": "'Londrina Shadow'",
         "open-sans": "'Open Sans'",
       },
       borderRadius: {
+        "8xs": "5px",
         "18xl": "37px",
       },
     },
     fontSize: {
+      base: "16px",
       lg: "18px",
       xl: "20px",
       "28xl": "47px",

@@ -1,6 +1,10 @@
-# CollaboardV2
-Collabo is a real-time whiteboard collaborator, this is version 2, which has improved UI/UX and uses latest tech for faster responsiveness.
-This app is still under construction you can visit the below repo for the first version.
-https://github.com/soorough/collaboard
-this is the deployment link
-You can https://board-3254.onrender.com/
+
+  # Collaboard - 1
+
+  Note: Please ensure you have installed <code><a href="https://nodejs.org/en/download/">nodejs</a></code>
+
+  To preview and run the project on your device:
+  1) Open project folder in <a href="https://code.visualstudio.com/download">Visual Studio Code</a>
+  2) In the terminal, run `npm install`
+  3) Run `npm run dev` to view project in browser
+  

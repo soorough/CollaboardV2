@@ -1,25 +1,12 @@
 import type { NextPage } from "next";
-import { Button } from "@mui/material";
 
 const ZoomBar: NextPage = () => {
   return (
-    <Button
-      className="w-[73px] h-[43px] z-[2]"
-      disableElevation={true}
-      variant="contained"
-      sx={{
-        textTransform: "none",
-        color: "#85b6ff",
-        fontSize: "16",
-        background: "#2a2a2a",
-        borderRadius: "5px",
-        "&:hover": { background: "#2a2a2a" },
-        width: 73,
-        height: 43,
-      }}
-    >
-      100%
-    </Button>
+    <div className="rounded-8xs bg-gray flex flex-row items-center justify-center pt-1 pb-[3px] pr-3 pl-[13px] z-[2] text-center text-base text-cornflowerblue font-josefin-sans">
+      <div className="flex flex-row items-center justify-center py-2.5 px-[5px]">
+        <div className="relative">100%</div>
+      </div>
+    </div>
   );
 };
 
