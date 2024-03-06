@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 
 const DrawToolBar: NextPage = () => {
   return (
-    <div className="w-[831px] h-[129px] absolute !m-[0] top-[820px] left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[3]">
+    <div className="w-[831px] h-[129px] relative !m-[0] top-[820px] left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[3]">
     <img
           className="w-[47.6px] h-[6.1px] absolute !m-[0] bottom-[113px] left-[404px] z-[4]"
           alt=""

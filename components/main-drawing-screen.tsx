@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useLayoutEffect } from "react";
 import { useRecoilState } from "recoil";
-import {gridbutton, zoomState} from '../recoil'
+import { gridbutton, zoomState } from "../recoil";
 import rough from "roughjs";
+import { RoughCanvas } from "roughjs/bin/canvas";
+
+const generator = rough.generator();
 
 const MainDrawingScreen: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [zoomPercentage, setZoomPercentage] = useRecoilState<number>(zoomState);
   const [gridState, setGridState] = useRecoilState<boolean>(gridbutton);
-  
-  useEffect(() => {
+
+  useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
       console.error("Canvas element not found");
@@ -21,24 +24,26 @@ const MainDrawingScreen: React.FC = () => {
     }
 
     const rc = rough.canvas(canvas);
-    
+    const rect = generator.rectangle(10, 10, 100, 100, { fill: 'red' });
+    rc.draw(rect);
+
     const drawGrid = () => {
       const gridSize = 25; // Adjust the grid size as needed
-      const zoomFactor = zoomPercentage/100;
-      console.log(zoomFactor)
+      const zoomFactor = zoomPercentage / 100;
+      console.log(zoomFactor);
       const scaledGridSize = gridSize * zoomFactor;
-    
+
       const ctx = canvas.getContext("2d");
-    
+
       if (!ctx) {
         console.error("Unable to get 2D context from canvas");
         return;
       }
-    
+
       if (!gridState) {
         // Draw the grid when gridState is false
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-    
+
         if (zoomFactor > 1.2) {
           for (let x = 0; x < canvas.width; x += scaledGridSize) {
             for (let y = 0; y < canvas.height; y += scaledGridSize) {
@@ -52,28 +57,12 @@ const MainDrawingScreen: React.FC = () => {
         // Clear the canvas when gridState is true (hide the grid)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
-      
-    };
-    
-
-    const drawRectangle = () => {
-      const zoomFactor = zoomPercentage / 100;
-      const scaledWidth = 100 * zoomFactor;
-      const scaledHeight = 50 * zoomFactor;
-      rc.rectangle(
-        20 * zoomFactor,
-        20 * zoomFactor,
-        scaledWidth,
-        scaledHeight,
-        { fill: "red" }
-      );
     };
 
     const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      drawGrid();
-      drawRectangle(); // Redraw after resizing
+      drawGrid(); // Redraw after resizing
     };
 
     const handleZoom = (deltaY: number) => {
