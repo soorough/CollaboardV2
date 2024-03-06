@@ -12,7 +12,7 @@ import { useDraw } from "../common/hooks/drawing";
 import { setRef } from "@mui/material";
 import { height, width } from "@mui/system";
 import { socket } from "../common/lib/socket";
-import Canvas from "../modules/canvas/components/canvas";
+import Canvas from "../modules/canvas/components/Canvas";
 
 const Desktop: NextPage = () => {
   
