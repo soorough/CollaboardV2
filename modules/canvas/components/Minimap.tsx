@@ -15,7 +15,7 @@ const MiniMap = forwardRef<
     x: MotionValue<number>;
     y: MotionValue<number>;
     dragging: boolean;
-    setMovedMiniMap: Dispatch<SetStateAction<Boolean>>;
+    setMovedMiniMap: Dispatch<SetStateAction<boolean>>;
   }
 >(({ x, y, dragging, setMovedMiniMap }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ const MiniMap = forwardRef<
         dragElastic={0}
         dragTransition={{ power: 0, timeConstant: 0 }}
         onDragEnd={() => setMovedMiniMap((prev) => !prev)}
-        className="absolute top-0 left-0 cursor-grab border-2 border-black"
+        className="absolute top-0 left-0 cursor-grab outline outline-cyan-500"
         style={{
           width: width / 10,
           height: height / 10,
