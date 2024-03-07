@@ -8,16 +8,16 @@ import React, {
 } from "react";
 import { useViewportSize } from "../../../common/hooks/useViewportSize";
 import { CANVAS_SIZE } from "../../../common/constants/canvasSize";
+import { useBoardPosition } from "../hooks/useBoardPosition";
 
 const MiniMap = forwardRef<
   HTMLCanvasElement,
   {
-    x: MotionValue<number>;
-    y: MotionValue<number>;
     dragging: boolean;
     setMovedMiniMap: Dispatch<SetStateAction<boolean>>;
   }
->(({ x, y, dragging, setMovedMiniMap }, ref) => {
+>(({dragging, setMovedMiniMap }, ref) => {
+  const {x, y} = useBoardPosition();
   const containerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useViewportSize();
 
@@ -40,7 +40,7 @@ const MiniMap = forwardRef<
 
   return (
     <div
-      className="absolute right-10 top-10 z-50 bg-zinc-400"
+      className="absolute right-4 top-16 z-50 bg-zinc-400"
       ref={containerRef}
       style={{
         width: CANVAS_SIZE.width / 10,
@@ -58,8 +58,9 @@ const MiniMap = forwardRef<
         dragConstraints={containerRef}
         dragElastic={0}
         dragTransition={{ power: 0, timeConstant: 0 }}
+        onDragStart={() => setMovedMiniMap((prev) => !prev)}
         onDragEnd={() => setMovedMiniMap((prev) => !prev)}
-        className="absolute top-0 left-0 cursor-grab outline outline-cyan-500"
+        className="absolute top-0 left-0 cursor-grab outline outline-zinc-700"
         style={{
           width: width / 10,
           height: height / 10,
@@ -67,7 +68,7 @@ const MiniMap = forwardRef<
           y: miniY,
         }}
         animate={{ x: -x.get() / 10, y: -y.get() / 10 }}
-        transition={{ duration: 0.1 }}
+        transition={{ duration: 0 }}
       />
     </div>
   );

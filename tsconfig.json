@@ -14,6 +14,7 @@
     "esModuleInterop": true,
     "module": "CommonJS",
     "resolveJsonModule": true,
+    "downlevelIteration": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
@@ -25,6 +26,7 @@
     "moduleResolution": "Node"
   },
   "include": [
+    "global.d.ts",
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx"

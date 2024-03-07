@@ -16,6 +16,7 @@ module.exports = {
         black: "#000",
         dimgray: "#454264",
         gainsboro: "#d9d9d9",
+        lightgrey: "#4F4F4F",
       },
       spacing: {},
       fontFamily: {
