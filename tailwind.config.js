@@ -56,8 +56,17 @@ module.exports = {
         raw: "screen and (max-width: 450px)",
       },
     },
+    overflow: {
+      scrollhide: {
+        overflowY: 'scroll',
+        scrollbarWidth: 'none', /* Firefox */
+        msOverflowStyle: 'none',  /* Internet Explorer 10+ */
+      },
+  
+    }
   },
   corePlugins: {
     preflight: false,
   },
+  
 };
