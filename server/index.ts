@@ -1,10 +1,11 @@
 import { createServer } from "http";
 
-import {} from "../common/types/global"
+import {} from "../common/types/global";
 
 import express from "express";
 import next, { NextApiHandler } from "next";
 import { Server } from "socket.io";
+import { socket } from "../common/lib/socket";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -21,30 +22,117 @@ nextApp.prepare().then(async () => {
     res.send("Healthy");
   });
 
+  const rooms = new Map<string, Room>();
+
+  const addMove = (roomId: string, socketId: string, move: Move) => {
+    const room = rooms.get(roomId);
+
+    if (!room?.users.has(socketId)) {
+      room?.users.set(socketId, [move]);
+    }
+
+    room?.users.get(socketId)?.push(move);
+  };
+
+  const undoMove = (roomId: string, socketId: string) => {
+    const room = rooms.get(roomId);
+
+    room?.users.get(socketId)?.pop();
+  };
+
+  const leaveRoom = (roomId: string, socketId: string) => {
+    const room = rooms.get(roomId)!;
+
+    const userMoves = room.users.get(socketId)!;
+
+    room.drawed.push(...userMoves);
+
+    room.users.delete(socketId);
+
+    console.log(room);
+  };
+
   io.on("connection", (socket) => {
-    console.log("connection");
+    const getRoomId = () => {
+      const joinedRoom = [...socket.rooms].find((room) => room !== socket.id);
+      if (!joinedRoom) return socket.id;
+      return joinedRoom;
+    };
+    console.log("connected to server");
 
-    socket.join("global")
+    socket.on("create_room", () => {
+      let roomId: string;
+      do {
+        roomId = Math.random().toString(36).substring(2, 6);
+      } while (rooms.has(roomId));
 
-    const allUsers = io.sockets.adapter.rooms.get("global");
-    if(allUsers) io.to("global").emit("users_in_room", [...allUsers]);
+      socket.join(roomId);
+
+      rooms.set(roomId, { users: new Map(), drawed: [] });
+      rooms.get(roomId)?.users.set(socket.id, []);
+
+      io.to(socket.id).emit("created", roomId);
+    });
+
+    socket.on("join_room", (roomId: string) => {
+      if (rooms.has(roomId)) {
+        socket.join(roomId);
+
+        io.to(socket.id).emit("joined", roomId);
+      } else {
+        io.to(socket.id).emit("joined", "", true);
+      }
+    });
+
+    socket.on("joined_room", () => {
+      console.log("joined room");
+
+      const roomId = getRoomId();
+
+      const room = rooms.get(roomId);
+      if (room) {
+        room.users.set(socket.id, []);
+
+        io.to(socket.id).emit("room", room, JSON.stringify([...room.users]));
+
+        socket.broadcast.to(roomId).emit("new_user", socket.id);
+      }
+    });
+
+    socket.on("leave_room", () => {
+      const roomId = getRoomId();
+      leaveRoom(roomId, socket.id);
+
+      io.to(roomId).emit("user_disconnected", socket.id);
+    });
 
     socket.on("draw", (move) => {
-      console.log("drawing");
-      socket.broadcast.emit("user_draw", move, socket.id);
+      // console.log("drawing");
+      const roomId = getRoomId();
+      addMove(roomId, socket.id, move);
+      socket.broadcast.to(roomId).emit("user_draw", move, socket.id);
     });
 
     socket.on("undo", () => {
-      console.log("undo");
-      socket.broadcast.emit("user_undo", socket.id);
-    })
-
-    socket.on("mouse_move", (x, y) => {
-      console.log("mouse_move");
-      socket.broadcast.emit("mouse_moved", x, y, socket.id);
+      // console.log("undo");
+      const roomId = getRoomId();
+      undoMove(roomId, socket.id);
+      socket.broadcast.to(roomId).emit("user_undo", socket.id);
     });
 
-    socket.on("disconnect", () => {
+    socket.on("mouse_move", (x, y) => {
+      // console.log("mouse_move");
+      const roomId = getRoomId();
+      socket.broadcast.to(roomId).emit("mouse_moved", x, y, socket.id);
+    });
+
+    socket.on("disconnecting", () => {
+      const roomId = getRoomId();
+
+      leaveRoom(roomId, socket.id);
+
+      io.to(roomId).emit("user_disconnected", socket.id);
+
       console.log("client disconnected");
     });
   });
@@ -52,6 +140,6 @@ nextApp.prepare().then(async () => {
   app.all("*", (req: any, res: any) => nextHandler(req, res));
 
   server.listen(port, () => {
-    console.log(`Server is listening on ${port}`);
+    console.log(`> Ready on http://localhost:${port}`);
   });
 });
