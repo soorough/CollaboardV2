@@ -1,12 +1,16 @@
 import React from "react";
-import { useSetOptions } from "../../../common/recoil/options/options.hooks";
+import { useSetOptions } from "../../../../common/recoil/options/options.hooks";
+import ColorPicker from "./ColorPicker";
+import LineWidthPicker from "./LineWidthPicker";
 
 export const ToolBar = () => {
   const setOptions = useSetOptions();
   return (
     <>
       <div className="w-[831px] h-[129px] absolute !m-[0] top-[780px] left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[50]">
-        <img
+      <LineWidthPicker/>
+      <ColorPicker/>
+        {/* <img
           className="w-[47.6px] h-[6.1px] absolute !m-[0] bottom-[113px] left-[404px] z-[4]"
           alt=""
           src="/drag.svg"
@@ -46,7 +50,7 @@ export const ToolBar = () => {
             src="/blue.svg"
           />
         </button>
-
+        
         <button
           className="absolute left-[710px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
@@ -171,7 +175,7 @@ export const ToolBar = () => {
           loading="lazy"
           alt=""
           src="/undo@2x.png"
-        />
+        /> */}
       </div>
     </>
   );

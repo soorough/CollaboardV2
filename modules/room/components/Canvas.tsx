@@ -1,14 +1,18 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useKeyPressEvent } from "react-use";
 import { useViewportSize } from "../../../common/hooks/useViewportSize";
-import { useMotionValue, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { CANVAS_SIZE } from "../../../common/constants/canvasSize";
-import { useDraw, useSocketDraw } from "../hooks/Canvas.hooks";
-import MiniMap from "./Minimap";
 import { useBoardPosition } from "../hooks/useBoardPosition";
-import { TopNavBar } from "./TopNavBar";
+import { useRoom } from "../../../common/recoil/room";
+import { socket } from "../../../common/lib/socket";
+import { drawAllMoves } from "../helpers/Canvas.helpers";
+import { useDraw } from "../hooks/useDraw";
+import { useSocketDraw } from "../hooks/useSocketDraw";
+import MiniMap from "./Minimap";
 
 const Canvas = () => {
+  const room = useRoom();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const smallCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -27,7 +31,7 @@ const Canvas = () => {
   // const x = useMotionValue(0);
   // const y = useMotionValue(0);
 
-  const {x, y} = useBoardPosition();
+  const { x, y } = useBoardPosition();
 
   const copyCanvasToSmall = () => {
     if (canvasRef.current && smallCanvasRef.current) {
@@ -51,7 +55,9 @@ const Canvas = () => {
     handleStartDrawing,
     drawing,
     handleUndo,
-  } = useDraw(ctx, dragging, copyCanvasToSmall);
+  } = useDraw(ctx, dragging);
+
+  useSocketDraw(ctx, drawing);
 
   useEffect(() => {
     const newCtx = canvasRef.current?.getContext("2d");
@@ -70,7 +76,16 @@ const Canvas = () => {
     };
   }, [dragging]);
 
-  useSocketDraw(ctx, drawing, copyCanvasToSmall);
+  useEffect(() => {
+    if (ctx) socket.emit("joined_room");
+  }, [ctx]);
+
+  useEffect(() => {
+    if (ctx) {
+      drawAllMoves(ctx, room);
+      copyCanvasToSmall();
+    }
+  }, [ctx, room]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -78,7 +93,7 @@ const Canvas = () => {
         ref={canvasRef}
         width={CANVAS_SIZE.width}
         height={CANVAS_SIZE.height}
-        className={`bg-zinc-300 ${dragging && "cursor-move"}`}
+        className={`bg-zinc-200 ${dragging && "cursor-move"}`}
         style={{ x, y }}
         drag={dragging}
         dragConstraints={{

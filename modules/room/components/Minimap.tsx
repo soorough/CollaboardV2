@@ -40,7 +40,7 @@ const MiniMap = forwardRef<
 
   return (
     <div
-      className="absolute right-4 top-16 z-50 bg-zinc-400"
+      className="absolute right-4 top-16 z-30 rounded-lg bg-zinc-300"
       ref={containerRef}
       style={{
         width: CANVAS_SIZE.width / 10,
@@ -60,7 +60,7 @@ const MiniMap = forwardRef<
         dragTransition={{ power: 0, timeConstant: 0 }}
         onDragStart={() => setMovedMiniMap((prev) => !prev)}
         onDragEnd={() => setMovedMiniMap((prev) => !prev)}
-        className="absolute top-0 left-0 cursor-grab outline outline-zinc-700"
+        className="absolute top-0 left-0 cursor-grab rounded-lg outline outline-zinc-400"
         style={{
           width: width / 10,
           height: height / 10,

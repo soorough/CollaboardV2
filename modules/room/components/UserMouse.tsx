@@ -1,10 +1,16 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useBoardPosition } from "../hooks/useBoardPosition";
 import { socket } from "../../../common/lib/socket";
 import { motion } from "framer-motion";
 import { FaDotCircle } from "react-icons/fa";
 
-export const UserMouse = ({ userId }: { userId: string }) => {
+export const UserMouse = ({
+  userId,
+  username,
+}: {
+  userId: string;
+  username: string;
+}) => {
   const boardPos = useBoardPosition();
   const [x, setX] = useState(boardPos.x.get());
   const [y, setY] = useState(boardPos.y.get());
@@ -26,20 +32,23 @@ export const UserMouse = ({ userId }: { userId: string }) => {
   useEffect(() => {
     const unsubscribe = boardPos.x.onChange(setX);
     return unsubscribe;
-  }, [boardPos.x])
+  }, [boardPos.x]);
 
   useEffect(() => {
     const unsubscribe = boardPos.x.onChange(setY);
     return unsubscribe;
-  }, [boardPos.y])
+  }, [boardPos.y]);
 
-  return(
-    <motion.div className={`absolute top-0 left-0 text-cyan-800 ${pos.x === -1 && "hidden" } pointer-events-none`}
-    animate = {{x:pos.x+x, y:pos.y+y}}
-    transition={{duration: 0.1, ease: "linear"}}
+  return (
+    <motion.div
+      className={`absolute top-0 left-0 text-cyan-800 ${
+        pos.x === -1 && "hidden"
+      } pointer-events-none`}
+      animate={{ x: pos.x + x, y: pos.y + y }}
+      transition={{ duration: 0.1, ease: "linear" }}
     >
-        <FaDotCircle/>
+      <FaDotCircle />
+      <p className="ml-2 ">{username}</p>
     </motion.div>
-  )
-  
+  );
 };

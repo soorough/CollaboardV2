@@ -1,8 +1,9 @@
 export const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
-  const { options, path } = move;
   const tempCtx = ctx;
-
+  
   if (tempCtx) {
+    const { options, path } = move;
+    
     tempCtx.lineWidth = options.lineWidth;
     tempCtx.strokeStyle = options.lineColor;
 
@@ -16,24 +17,21 @@ export const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
 };
 
 export const drawAllMoves = (
-  ctx: CanvasRenderingContext2D,
-  movesWithoutUser: Move[],
-  savedMoves: Move[],
-  users: { [key: string]: Move[] }
+  ctx: CanvasRenderingContext2D,  
+  room: ClientRoom
 ) => {
+  const { usersMoves, movesWithoutUser, myMoves } = room;
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   movesWithoutUser.forEach((move) => {
     handleMove(move, ctx);
   });
 
-  Object.values(users).forEach((user) => {
-    user.forEach((userMove) => {
-      user.forEach((move) => handleMove(move, ctx));
-    });
+  usersMoves.forEach((userMoves) => {
+    userMoves.forEach((move) => handleMove(move, ctx));
   });
 
-  savedMoves.forEach((move) => {
+  myMoves.forEach((move) => {
     handleMove(move, ctx);
   });
 };
