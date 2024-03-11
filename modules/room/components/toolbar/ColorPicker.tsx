@@ -25,7 +25,7 @@ const ColorPicker = () => {
         <AnimatePresence>
           {opened && (
             <motion.div
-              className="absolute top-0 left-14"
+              className="absolute left-3 bottom-14"
               variants={ColorPickerAnimation}
               initial="from"
               animate="to"

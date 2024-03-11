@@ -1,37 +1,37 @@
 export const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
-  const tempCtx = ctx;
-  
-  if (tempCtx) {
-    const { options, path } = move;
-    
-    tempCtx.lineWidth = options.lineWidth;
-    tempCtx.strokeStyle = options.lineColor;
+  const { options, path } = move;
 
-    tempCtx.beginPath();
-    path.forEach(([x, y]) => {
-      tempCtx.lineTo(x, y);
-    });
-    tempCtx.stroke();
-    tempCtx.closePath();
-  }
+  ctx.lineWidth = options.lineWidth;
+  ctx.strokeStyle = options.lineColor;
+
+  if (move.eraser) ctx.globalCompositeOperation = "destination-out";
+
+  ctx.beginPath();
+  path.forEach(([x, y]) => {
+    ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.closePath();
+
+  ctx.globalCompositeOperation = "source-over";
 };
 
 export const drawAllMoves = (
-  ctx: CanvasRenderingContext2D,  
+  ctx: CanvasRenderingContext2D,
   room: ClientRoom
 ) => {
   const { usersMoves, movesWithoutUser, myMoves } = room;
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  movesWithoutUser.forEach((move) => {
-    handleMove(move, ctx);
-  });
+  const moves = [...movesWithoutUser, ...myMoves];
 
   usersMoves.forEach((userMoves) => {
-    userMoves.forEach((move) => handleMove(move, ctx));
+    moves.push(...userMoves);
   });
 
-  myMoves.forEach((move) => {
+  moves.sort((a, b) => a.timestamp - b.timestamp);
+
+  moves.forEach((move) => {
     handleMove(move, ctx);
   });
 };

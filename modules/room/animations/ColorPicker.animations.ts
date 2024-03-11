@@ -1,4 +1,3 @@
-import { duration } from "@mui/material";
 import { DEFAULT_EASE } from "../../../common/constants/easing";
 
 export const ColorPickerAnimation = {

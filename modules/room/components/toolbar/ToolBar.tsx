@@ -1,16 +1,23 @@
 import React from "react";
-import { useSetOptions } from "../../../../common/recoil/options/options.hooks";
 import ColorPicker from "./ColorPicker";
 import LineWidthPicker from "./LineWidthPicker";
+import {Eraser} from "./Eraser";
+import { RefObject } from "react";
+import { useSetOptions } from "../../../../common/recoil/options";
 
-export const ToolBar = () => {
+export const ToolBar = ({
+  undoRef,
+}: {
+  undoRef: RefObject<HTMLButtonElement>;
+}) => {
   const setOptions = useSetOptions();
   return (
     <>
-      <div className="w-[831px] h-[129px] absolute !m-[0] top-[780px] left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[50]">
-      <LineWidthPicker/>
-      <ColorPicker/>
-        {/* <img
+      <div className="w-[831px] h-[129px] absolute bottom-2 flex flex-col overflow-hidden left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[30]">
+        <LineWidthPicker />
+
+        <Eraser />
+        <img
           className="w-[47.6px] h-[6.1px] absolute !m-[0] bottom-[113px] left-[404px] z-[4]"
           alt=""
           src="/drag.svg"
@@ -25,12 +32,12 @@ export const ToolBar = () => {
           className="absolute left-[670px] bottom-[69px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "white" }))
+            setOptions((prev) => ({ ...prev, lineColor: "white" }));
             console.log("White button clicked!");
           }}
         >
           <img
-            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%]"
+            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%] hover:scale-125"
             alt=""
             src="/white.svg"
           />
@@ -40,52 +47,57 @@ export const ToolBar = () => {
           className="absolute left-[670px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "blue" }))
+            setOptions((prev) => ({ ...prev, lineColor: "blue" }));
             console.log("Blue button clicked!");
           }}
         >
           <img
-            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%]"
+            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%] hover:scale-125"
             alt=""
             src="/blue.svg"
           />
         </button>
-        
+
         <button
-          className="absolute left-[710px] bottom-[18px] bg-inherit z-[4]"
+          className="absolute left-[709.6px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "green" }))
-            console.log("Green button clicked!");
+            setOptions((prev) => ({ ...prev, lineColor: "black" }));
+            console.log("Black button clicked!");
           }}
         >
           <img
+            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%] hover:scale-125"
+            alt=""
+            src="/black.svg"
+          />
+          {/* <img
             className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%] object-contain"
             alt=""
             src="/green@2x.png"
-          />
+          /> */}
         </button>
 
         <button
           className="absolute left-[630px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "yellow" }))
+            setOptions((prev) => ({ ...prev, lineColor: "yellow" }));
             console.log("Yellow button clicked!");
           }}
         >
           <img
-            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%]"
+            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%] hover:scale-125"
             alt=""
             src="/yellow.svg"
           />
         </button>
 
         <button
-          className="absolute left-[710px] bottom-[69px] bg-inherit z-[4]"
+          className="absolute left-[710px] bottom-[69px] bg-inherit z-[4] hover:scale-125"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "red" }))
+            setOptions((prev) => ({ ...prev, lineColor: "red" }));
             console.log("Red button clicked!");
           }}
         >
@@ -96,26 +108,15 @@ export const ToolBar = () => {
           />
         </button>
 
-        <button
-          className="absolute left-[630px] bottom-[69px] bg-inherit z-[4]"
-          onClick={() => {
-            // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "black" }))
-            console.log("Black button clicked!");
-          }}
-        >
-          <img
-            className="w-[30.7px] h-[30.7px] !m-[0] rounded-[100%]"
-            alt=""
-            src="/black.svg"
-          />
+        <button className="absolute left-[633px] bottom-[78px] bg-inherit z-[4]">
+          <ColorPicker />
         </button>
 
-        <img
+        {/* <img
           className="w-[21.6px] h-[21.6px] absolute !m-[0] left-[640.9px] bottom-[80.9px] mix-blend-normal z-[4]"
           alt=""
           src="/hover.svg"
-        />
+        /> */}
         <img
           className="w-[29px] h-[91px] absolute !m-[0] left-[568px] bottom-[0px] z-[4]"
           loading="lazy"
@@ -170,12 +171,18 @@ export const ToolBar = () => {
           alt=""
           src="/redo@2x.png"
         />
-        <img
-          className="w-[35.3px] h-[35.3px] absolute !m-[0] bottom-[43px] left-[20px] rounded-[100%] object-contain z-[4]"
-          loading="lazy"
-          alt=""
-          src="/undo@2x.png"
-        /> */}
+
+        <button
+          className="absolute left-[0px] bottom-[0px] bg-inherit z-[4]"
+          ref={undoRef}
+        >
+          <img
+            className="w-[35.3px] h-[35.3px] absolute !m-[0] bottom-[43px] left-[20px] rounded-[100%] object-contain z-[4]"
+            loading="lazy"
+            alt=""
+            src="/undo@2x.png"
+          />
+        </button>
       </div>
     </>
   );

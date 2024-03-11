@@ -1,24 +1,30 @@
 import RoomContextProvider from "../context/Room.context";
-import { MousePosition } from "./MousePosition";
-import { MouseRenderer } from "./MouseRenderer";
-import Canvas from "./canvas";
-import React from "react";
+import { MousePosition } from "./board/MousePosition";
+import { MouseRenderer } from "./board/MouseRenderer";
+import Canvas from "./board/Canvas";
+import React, { useRef } from "react";
 import { TopNavBar } from "./TopNavBar";
-import { useRoom, useSetRoomId } from "../../../common/recoil/room";
+import { useRoom } from "../../../common/recoil/room";
 import { ToolBar } from "./toolbar/ToolBar";
 import NameInput from "./Nameinput";
+import UserList from "./UserList";
+import { Chat } from "./chat/Chat";
 
 const Room = () => {
   const room = useRoom();
- if(!room.id) return <NameInput/>
+
+  const undoRef = useRef<HTMLButtonElement>(null);
+  if (!room.id) return <NameInput />;
   return (
     <RoomContextProvider>
       <div className="relative h-full w-full overflow-hidden">
         <TopNavBar />
-        <ToolBar />
-        <Canvas />
+        <UserList />
+        <ToolBar undoRef={undoRef} />
+        <Canvas undoRef={undoRef} />
         <MousePosition />
         <MouseRenderer />
+        <Chat />
       </div>
     </RoomContextProvider>
   );

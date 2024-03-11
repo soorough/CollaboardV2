@@ -26,7 +26,7 @@ nextApp.prepare().then(async () => {
   const addMove = (roomId: string, socketId: string, move: Move) => {
     const room = rooms.get(roomId);
 
-    if (!room?.users.has(socketId)) {
+    if (room?.users.has(socketId)) {
       room?.usersMoves.set(socketId, [move]);
     }
 
@@ -115,7 +115,9 @@ nextApp.prepare().then(async () => {
         JSON.stringify([...room.users])
       );
 
-      socket.broadcast.to(roomId).emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous");
+      socket.broadcast
+        .to(roomId)
+        .emit("new_user", socket.id, room.users.get(socket.id) || "Anonymous");
     });
 
     socket.on("leave_room", () => {
@@ -128,8 +130,14 @@ nextApp.prepare().then(async () => {
     socket.on("draw", (move) => {
       // console.log("drawing");
       const roomId = getRoomId();
-      addMove(roomId, socket.id, move);
-      socket.broadcast.to(roomId).emit("user_draw", move, socket.id);
+
+      const timestamp = Date.now();
+      addMove(roomId, socket.id, { ...move, timestamp });
+
+      io.to(socket.id).emit("your_move", { ...move, timestamp });
+      socket.broadcast
+        .to(roomId)
+        .emit("user_draw", { ...move, timestamp }, socket.id);
     });
 
     socket.on("undo", () => {
@@ -137,6 +145,10 @@ nextApp.prepare().then(async () => {
       const roomId = getRoomId();
       undoMove(roomId, socket.id);
       socket.broadcast.to(roomId).emit("user_undo", socket.id);
+    });
+
+    socket.on("send_msg", (msg) => {
+      io.to(getRoomId()).emit("new_msg", socket.id, msg);
     });
 
     socket.on("mouse_move", (x, y) => {
