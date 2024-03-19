@@ -1,33 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import ColorPicker from "./ColorPicker";
 import LineWidthPicker from "./LineWidthPicker";
-import {Eraser} from "./Eraser";
-import { RefObject } from "react";
+import { Eraser } from "./Eraser";
 import { useSetOptions } from "../../../../common/recoil/options";
+import { useRefs } from "../../hooks/useRefs";
 
-export const ToolBar = ({
-  undoRef,
-}: {
-  undoRef: RefObject<HTMLButtonElement>;
-}) => {
+export const ToolBar = () => {
+  const { canvasRef, undoRef, bgRef } = useRefs();
+
   const setOptions = useSetOptions();
+
+  const [showEraser, setShowEraser] = useState(false);
+
+  const toggleEraser = () => {
+    setShowEraser(!showEraser);
+  };
+
   return (
     <>
-      <div className="w-[831px] h-[129px] absolute bottom-2 flex flex-col overflow-hidden left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[30]">
-        <LineWidthPicker />
-
-        <Eraser />
+      <div className="w-[831px] h-[129px] absolute bottom-2 flex flex-col overflow-hidden left-[calc(50%_-_426px)] rounded-[87px] mix-blend-normal z-[20]">
         <img
           className="w-[47.6px] h-[6.1px] absolute !m-[0] bottom-[113px] left-[404px] z-[4]"
           alt=""
           src="/drag.svg"
         />
+
         <img
           className="w-[35.3px] h-[35.3px] absolute !m-[0] left-[770px] rounded-[100%] bottom-[45.5px] z-[4]"
           loading="lazy"
           alt=""
           src="/settings.svg"
         />
+
+        
+
         <button
           className="absolute left-[670px] bottom-[69px] bg-inherit z-[4]"
           onClick={() => {
@@ -108,9 +114,8 @@ export const ToolBar = ({
           />
         </button>
 
-        <button className="absolute left-[633px] bottom-[78px] bg-inherit z-[4]">
-          <ColorPicker />
-        </button>
+        
+            {<ColorPicker />}
 
         {/* <img
           className="w-[21.6px] h-[21.6px] absolute !m-[0] left-[640.9px] bottom-[80.9px] mix-blend-normal z-[4]"
@@ -123,12 +128,19 @@ export const ToolBar = ({
           alt=""
           src="/autofill.svg"
         />
-        <img
-          className="w-[27px] h-[81px] absolute !m-[0] left-[498px] bottom-[0px] mix-blend-normal z-[4]"
-          loading="lazy"
-          alt=""
-          src="/eraser.svg"
-        />
+
+        <div>
+          <button onClick={toggleEraser}>
+            <img
+              className="w-[27px] h-[81px] absolute !m-[0] left-[498px] bottom-[0px] mix-blend-normal z-[4]"
+              loading="lazy"
+              alt=""
+              src="/eraser.svg"
+            />
+          </button>
+          {showEraser && <Eraser />}
+        </div>
+
         <img
           className="w-[54px] h-[97px] absolute !m-[0] left-[400px] bottom-[0px]  z-[4]"
           loading="lazy"
@@ -184,6 +196,7 @@ export const ToolBar = ({
           />
         </button>
       </div>
+      
     </>
   );
 };

@@ -1,6 +1,5 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useOptions } from "../../../../common/recoil/options";
-import { useClickAway } from "react-use";
 import React from "react";
 import { ColorPickerAnimation } from "../../animations/ColorPicker.animations";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,19 +12,36 @@ const ColorPicker = () => {
 
   const [opened, setOpened] = useState(false);
 
-  useClickAway(ref, () => setOpened(false));
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpened(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+
+  const handleButtonClick = () => {
+    setOpened((prevOpened) => !prevOpened);
+  };
+
 
   return (
-    <div className="relative flex items-center" ref={ref}>
+    <div className="fixed z-[5]">
       <button
-        className="h-6 w-6 rounded-full border-white transition-all hover:scale-125"
+        className="absolute h-6 w-6 rounded-full left-[638px] -bottom-[50px] border-white transition-all hover:scale-125 shadow-3xl"
         style={{ backgroundColor: options.lineColor }}
-        onClick={() => setOpened(!opened)}
+        onClick={handleButtonClick}
       >
         <AnimatePresence>
           {opened && (
             <motion.div
-              className="absolute left-3 bottom-14"
+              className="absolute left-[] bottom-[2rem] z-[4] items-center"
+              ref={ref}
               variants={ColorPickerAnimation}
               initial="from"
               animate="to"

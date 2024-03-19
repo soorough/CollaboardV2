@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useOptions } from "../../../../common/recoil/options";
 
 export const Eraser = () => {

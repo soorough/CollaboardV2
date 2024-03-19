@@ -1,4 +1,4 @@
-import { MotionValue, useMotionValue, motion } from "framer-motion";
+import { useMotionValue, motion } from "framer-motion";
 import React, {
   Dispatch,
   SetStateAction,
@@ -40,7 +40,7 @@ const MiniMap = forwardRef<
 
   return (
     <div
-      className="absolute right-4 top-16 z-30 rounded-lg overflow-hidden bg-zinc-300"
+      className="absolute right-4 top-16 z-10 rounded-lg overflow-hidden bg-zinc-50 shadow-lg"
       ref={containerRef}
       style={{
         width: CANVAS_SIZE.width / 10,
@@ -60,12 +60,13 @@ const MiniMap = forwardRef<
         dragTransition={{ power: 0, timeConstant: 0 }}
         onDragStart={() => setMovedMiniMap((prev) => !prev)}
         onDragEnd={() => setMovedMiniMap((prev) => !prev)}
-        className="absolute top-0 left-0 cursor-grab rounded-lg outline outline-zinc-400"
+        className="absolute top-0 left-0 cursor-grab rounded-lg"
         style={{
           width: width / 10,
           height: height / 10,
           x: miniX,
           y: miniY,
+          border: "2px solid darkgrey",
         }}
         animate={{ x: -x.get() / 10, y: -y.get() / 10 }}
         transition={{ duration: 0 }}

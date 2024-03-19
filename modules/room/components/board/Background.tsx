@@ -1,27 +1,38 @@
-import { useEffect, useRef } from "react";
-import { useBoardPosition } from "../../hooks/useBoardPosition";
-import { CANVAS_SIZE } from "../../../../common/constants/canvasSize";
+import React, { RefObject } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import React from 'react'
+import { CANVAS_SIZE } from "../../../../common/constants/canvasSize";
+import { useBoardPosition } from "../../hooks/useBoardPosition";
 
-
-export const Background = () => {
+const Background = ({bgRef}: {bgRef: RefObject<HTMLCanvasElement>}) => {
   const { x, y } = useBoardPosition();
 
-  const ref = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
-    const ctx = ref.current?.getContext("2d");
+    const ctx = bgRef.current?.getContext("2d");
 
     if (ctx) {
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, CANVAS_SIZE.width, CANVAS_SIZE.height);
 
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "#000";
+      ctx.strokeStyle = "#ccc";
 
-      const dotRadius = 2;
-      const dotColor = "#000";
+      const dotRadius = 1.5;
+      const dotColor = "#ccc";
+
+      // for (let i = 0; i < CANVAS_SIZE.height; i += 25) {
+      //   ctx.beginPath();
+      //   ctx.moveTo(0, i);
+      //   ctx.lineTo(ctx.canvas.width, i);
+      //   ctx.stroke();
+      // }
+
+      // for (let i = 0; i < CANVAS_SIZE.width; i += 25) {
+      //   ctx.beginPath();
+      //   ctx.moveTo(i, 0);
+      //   ctx.lineTo(i, ctx.canvas.height);
+      //   ctx.stroke();
+      // }
 
       for (let cy = 0; cy < CANVAS_SIZE.height; cy += 25) {
         for (let cx = 0; cx < CANVAS_SIZE.width; cx += 25) {
@@ -32,15 +43,17 @@ export const Background = () => {
         }
       }
     }
-  }, []);
+  }, [bgRef]);
 
   return (
     <motion.canvas
-      ref={ref}
+      ref={bgRef}
       width={CANVAS_SIZE.width}
       height={CANVAS_SIZE.height}
-      className="absolute top-0 bg-zinc-400"
+      className="absolute top-0 bg-zinc-100"
       style={{ x, y }}
     />
   );
 };
+
+export default Background;
