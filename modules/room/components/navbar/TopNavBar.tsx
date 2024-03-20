@@ -3,6 +3,7 @@ import ShapeSelector from "./ShapeSelector";
 import Menu from "./Menu";
 import { CANVAS_SIZE } from "../../../../common/constants/canvasSize";
 import { useRefs } from "../../hooks/useRefs";
+import ImageChooser from "./ImageChooser";
 
 export const TopNavBar = () => {
   const { canvasRef, undoRef, bgRef } = useRefs();
@@ -70,7 +71,10 @@ export const TopNavBar = () => {
               showDropdown ? "" : "hidden"
             }`}
           >
-            <div onClick={handleDownload} className="py-2 px-2 cursor-pointer text-[15px] text-black hover:bg-slate-200 transition-color">
+            <div
+              onClick={handleDownload}
+              className="py-2 px-2 cursor-pointer text-[15px] text-black hover:bg-slate-200 transition-color"
+            >
               Download as PNG
             </div>
             <div className="py-2 px-2 cursor-pointer text-[15px] text-black hover:bg-slate-200 transition-color">
@@ -98,9 +102,7 @@ export const TopNavBar = () => {
           />
         </div>
 
-        <div className="">
-          <ShapeSelector />
-        </div>
+        <ShapeSelector />
 
         <img
           className="h-[19.5px] w-[19.5px] relative z-[1]"
@@ -108,12 +110,7 @@ export const TopNavBar = () => {
           alt=""
           src="/addtextbutton.svg"
         />
-        <img
-          className="h-[21.1px] w-[24.4px] relative z-[1]"
-          loading="lazy"
-          alt=""
-          src="/addimagesbutton.svg"
-        />
+        <ImageChooser />
       </div>
       <div className="flex flex-row items-start justify-start gap-[0px_24px]">
         <img

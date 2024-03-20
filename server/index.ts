@@ -5,6 +5,7 @@ import {} from "../common/types/global";
 import express from "express";
 import next, { NextApiHandler } from "next";
 import { Server } from "socket.io";
+import { v4 as uuid } from 'uuid';
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -62,7 +63,7 @@ nextApp.prepare().then(async () => {
   
       console.log(room);
     };
-    
+
     console.log("connected to server");
 
     socket.on("create_room", (username) => {
@@ -138,6 +139,9 @@ nextApp.prepare().then(async () => {
       const roomId = getRoomId();
 
       const timestamp = Date.now();
+
+      move.id = uuid()
+
       addMove(roomId, socket.id, { ...move, timestamp });
 
       io.to(socket.id).emit("your_move", { ...move, timestamp });
