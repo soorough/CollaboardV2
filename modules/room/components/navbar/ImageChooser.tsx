@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import useMoveImage from "../../hooks/useMoveImage";
-import { optimizeImage } from "next/dist/server/image-optimizer";
+import optimizeImage from "../../../../common/lib/optimizeImage";
 
 const ImageChooser = () => {
   const { setMoveImage } = useMoveImage();

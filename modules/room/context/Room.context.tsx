@@ -15,12 +15,13 @@ import {
 } from "../../../common/recoil/room/room.hooks";
 import { COLORS_ARRAY } from "../../../common/constants/colors";
 
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
 
 export const roomContext = createContext<{
   x: MotionValue<number>;
   y: MotionValue<number>;
   undoRef: RefObject<HTMLButtonElement>;
+  redoRef: RefObject<HTMLButtonElement>;
   canvasRef: RefObject<HTMLCanvasElement>;
   bgRef: RefObject<HTMLCanvasElement>;
   minimapRef: RefObject<HTMLCanvasElement>;
@@ -30,13 +31,14 @@ export const roomContext = createContext<{
 
 const roomContextProvider = ({ children }: { children: ReactChild }) => {
   const setRoom = useSetRoom();
-  const {users} = useRoom();
+  const { users } = useRoom();
   const { handleAddUser, handleRemoveUser } = useSetUsers();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   const undoRef = useRef<HTMLButtonElement>(null);
+  const redoRef = useRef<HTMLButtonElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgRef = useRef<HTMLCanvasElement>(null);
   const minimapRef = useRef<HTMLCanvasElement>(null);
@@ -72,17 +74,17 @@ const roomContextProvider = ({ children }: { children: ReactChild }) => {
 
     socket.on("new_user", (userId, username) => {
       toast(`${username} has joined.`, {
-        position:"top-center",
-        theme:"colored",
-      })
+        position: "top-center",
+        theme: "colored",
+      });
       handleAddUser(userId, username);
     });
 
     socket.on("user_disconnected", (userId) => {
       toast(`${users.get(userId)?.name || "Anonymous"} has left.`, {
-        position:"top-center",
-        theme:"colored",
-      })
+        position: "top-center",
+        theme: "colored",
+      });
       handleRemoveUser(userId);
     });
 
@@ -94,7 +96,19 @@ const roomContextProvider = ({ children }: { children: ReactChild }) => {
   }, [handleAddUser, handleRemoveUser, setRoom, users]);
 
   return (
-    <roomContext.Provider value={{ x, y, undoRef, canvasRef, bgRef, minimapRef, moveImage, setMoveImage}}>
+    <roomContext.Provider
+      value={{
+        x,
+        y,
+        undoRef,
+        redoRef,
+        canvasRef,
+        bgRef,
+        minimapRef,
+        moveImage,
+        setMoveImage,
+      }}
+    >
       {children}
     </roomContext.Provider>
   );

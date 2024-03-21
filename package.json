@@ -42,6 +42,13 @@
   "transformIgnorePatterns": [
     "node_modules/(?!(axios|react-toastify))"
   ],
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "child_process": false,
+    "worker_threads": false
+  },
   "scripts": {
     "dev": "nodemon server/index.ts",
     "build": "next build && next export -o build/",
