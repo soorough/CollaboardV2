@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import ShapeSelector from "./ShapeSelector";
-import Menu from "./Menu";
 import { CANVAS_SIZE } from "../../../../common/constants/canvasSize";
 import { useRefs } from "../../hooks/useRefs";
 import ImageChooser from "./ImageChooser";
+import ModePicker from "./ModePicker";
 
 export const TopNavBar = () => {
-  const { canvasRef, undoRef, bgRef } = useRefs();
+  const { canvasRef, bgRef } = useRefs();
 
-  const [showShapeSelector, setShowShapeSelector] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isRotated, setIsRotated] = useState(false);
-
-  const toggleShapeSelector = () => {
-    setShowShapeSelector(!showShapeSelector);
-  };
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -87,12 +82,8 @@ export const TopNavBar = () => {
         </div>
       </div>
       <div className="w-[494px] flex flex-row items-end justify-start py-0 pr-[127px] pl-0 box-border gap-[0px_64px] max-w-full mq675:gap-[0px_64px] mq675:pr-[63px] mq675:box-border">
-        <img
-          className="h-[26px] w-[26px] relative min-h-[26px] z-[1]"
-          loading="lazy"
-          alt=""
-          src="/drawbarbutton.svg"
-        />
+        
+        <ModePicker/>
         <div className="w-5 flex flex-col items-start justify-start pt-0 px-0 pb-0.5 box-border">
           <img
             className="w-[19.5px] h-[19.6px] relative z-[1]"

@@ -11,11 +11,13 @@ import { useSocketDraw } from "../../hooks/useSocketDraw";
 import MiniMap from "./Minimap";
 import Background from "./Background";
 import { useRefs } from "../../hooks/useRefs";
+import { useCtx } from "../../hooks/useCtx";
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
 
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
+  const ctx = useCtx();
+  
   const [dragging, setDragging] = useState(false);
   const [, setMovedMinimap] = useState(false);
 
@@ -34,11 +36,9 @@ const Canvas = () => {
   const { handleDraw, handleEndDrawing, handleStartDrawing, drawing } =
     useDraw(dragging);
 
-  useSocketDraw(ctx, drawing);
+  useSocketDraw(drawing);
 
   useEffect(() => {
-    const newCtx = canvasRef.current?.getContext("2d");
-    if (newCtx) setCtx(newCtx);
 
     const handleKeyUp = (e: KeyboardEvent) => {
       if (!e.ctrlKey && dragging) {
