@@ -17,15 +17,13 @@ const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
 
   const ctx = useCtx();
-  
+
   const [dragging, setDragging] = useState(false);
-  const [, setMovedMinimap] = useState(false);
+  const [setMovedMinimap] = useState(false);
 
   const { width, height } = useViewportSize();
 
   const { x, y } = useBoardPosition();
-
-  const { handleUndo, handleRedo } = useMovesHandlers();
 
   useKeyPressEvent("Control", (e) => {
     if (e.ctrlKey && !dragging) {
@@ -33,13 +31,19 @@ const Canvas = () => {
     }
   });
 
-  const { handleDraw, handleEndDrawing, handleStartDrawing, drawing } =
-    useDraw(dragging);
+  const {
+    handleDraw,
+    handleEndDrawing,
+    handleStartDrawing,
+    drawing,
+    clearOnYourMove,
+  } = useDraw(dragging);
 
   useSocketDraw(drawing);
 
-  useEffect(() => {
+  const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
 
+  useEffect(() => {
     const handleKeyUp = (e: KeyboardEvent) => {
       if (!e.ctrlKey && dragging) {
         setDragging(false);

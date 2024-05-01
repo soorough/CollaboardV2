@@ -1,6 +1,7 @@
 //interfaces
+import {RgbaColor} from "react-colorful";
 
-export declare global {
+declare global {
   type Shape = "line" | "circle" | "rect" | "image";
   type CtxMode =
     | "eraser"
@@ -14,7 +15,8 @@ export declare global {
     | "autofill";
   interface CtxOptions {
     lineWidth: number;
-    lineColor: string;
+    lineColor: RgbaColor,
+    fillColor: RgbaColor,
     shape: Shape;
     mode: CtxMode;
     selection: { x: number; y: number; width: number; height: number } | null;
@@ -30,7 +32,6 @@ export declare global {
     rect: {
       width: number;
       height: number;
-      fill?:boolean;
     };
     img: {
       base64: string;

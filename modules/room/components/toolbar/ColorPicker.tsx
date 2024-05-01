@@ -3,7 +3,7 @@ import { useOptions } from "../../../../common/recoil/options";
 import React from "react";
 import { ColorPickerAnimation } from "../../animations/ColorPicker.animations";
 import { AnimatePresence, motion } from "framer-motion";
-import { HexColorPicker } from "react-colorful";
+import { RgbaColorPicker } from "react-colorful";
 
 const ColorPicker = () => {
   const [options, setOptions] = useOptions();
@@ -25,38 +25,37 @@ const ColorPicker = () => {
     };
   }, [ref]);
 
-  const handleButtonClick = () => {
-    setOpened((prevOpened) => !prevOpened);
-  };
-
-
   return (
     <div className="fixed z-[5]">
       <button
         className="absolute h-6 w-6 rounded-full left-[638px] -bottom-[50px] border-white transition-all hover:scale-125 shadow-3xl"
-        style={{ backgroundColor: options.lineColor }}
-        onClick={handleButtonClick}
-      >
+        onClick={() => setOpened(!opened)}
+      />
         <AnimatePresence>
           {opened && (
             <motion.div
-              className="absolute left-[] bottom-[2rem] z-[4] items-center"
+              className="absolute left-[40rem] bottom-[2rem] z-[4] mt-24 items-center"
               ref={ref}
               variants={ColorPickerAnimation}
               initial="from"
               animate="to"
               exit="from"
             >
-              <HexColorPicker
+              <h2 className="font-semibold text-black">Line Color</h2>
+              <RgbaColorPicker
+                className="mb-5"
                 color={options.lineColor}
-                onChange={(e) =>
-                  setOptions((prev) => ({ ...prev, lineColor: e }))
-                }
+                onChange={(e) => setOptions({ ...options, lineColor: e })}
+              />
+              <h2 className="font-semibold text-black">Fill Color</h2>
+              <RgbaColorPicker
+                color={options.fillColor}
+                onChange={(e) => setOptions({ ...options, fillColor: e })}
               />
             </motion.div>
           )}
         </AnimatePresence>
-      </button>
+      
     </div>
   );
 };

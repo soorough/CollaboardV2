@@ -5,10 +5,11 @@ import { useSetSavedMoves } from "../../../common/recoil/savedMoves/savedMoves.h
 import { socket } from "../../../common/lib/socket";
 import { useCtx } from "./useCtx";
 import { useSelection } from "./useSelection";
+import { getStringFromRgba } from "../../../common/lib/rgba";
 
 let preMovesLength = 0;
 
-const useMovesHandlers = () => {
+const useMovesHandlers = (clearOnYourMove: () => void) => {
   const { canvasRef, minimapRef } = useRefs();
   const room = useRoom();
   const { handleAddMyMove, handleRemoveMyMove } = useMyMoves();
@@ -58,7 +59,8 @@ const useMovesHandlers = () => {
     }
 
     ctx!.lineWidth = moveOptions.lineWidth;
-    ctx!.strokeStyle = moveOptions.lineColor;
+    ctx!.strokeStyle = getStringFromRgba(moveOptions.lineColor);
+    ctx!.fillStyle = getStringFromRgba(moveOptions.fillColor);
     if (moveOptions.mode === "eraser")
       ctx!.globalCompositeOperation = "destination-out";
     else ctx!.globalCompositeOperation = "source-over";
@@ -76,20 +78,17 @@ const useMovesHandlers = () => {
         ctx?.beginPath();
         ctx?.ellipse(cX, cY, radiusX, radiusY, 0, 0, 2 * Math.PI);
         ctx?.stroke();
+        ctx?.fill();
         ctx?.closePath();
         break;
       }
       case "rect": {
         const { width, height } = move.rect;
         ctx?.beginPath();
-        if (move.rect.fill) {
-          ctx?.fillRect(path[0][0], path[0][1], width, height);
-          ctx?.fill();
-        } else {
-          ctx?.rect(path[0][0], path[0][1], width, height);
-          ctx?.stroke();
-        }
 
+        ctx?.rect(path[0][0], path[0][1], width, height);
+        ctx?.stroke();
+        ctx?.fill();
         ctx?.closePath();
         break;
       }
@@ -130,13 +129,14 @@ const useMovesHandlers = () => {
 
   useEffect(() => {
     socket.on("your_move", (move) => {
+      clearOnYourMove();
       handleAddMyMove(move);
     });
 
     return () => {
       socket.off("your_move");
     };
-  }, [handleAddMyMove]);
+  }, [handleAddMyMove, clearOnYourMove]);
 
   useEffect(() => {
     if (preMovesLength >= sortedMoves.length || !preMovesLength) {

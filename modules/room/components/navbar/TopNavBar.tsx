@@ -4,6 +4,7 @@ import { CANVAS_SIZE } from "../../../../common/constants/canvasSize";
 import { useRefs } from "../../hooks/useRefs";
 import ImageChooser from "./ImageChooser";
 import ModePicker from "./ModePicker";
+import Exit from "./Exit";
 
 export const TopNavBar = () => {
   const { canvasRef, bgRef } = useRefs();
@@ -110,12 +111,7 @@ export const TopNavBar = () => {
           alt=""
           src="/profile.svg"
         />
-        <img
-          className="h-[26px] w-[26px] relative min-h-[26px] z-[1]"
-          loading="lazy"
-          alt=""
-          src="/exitbutton.svg"
-        />
+        <Exit/>
       </div>
     </header>
   );

@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import ColorPicker from "./ColorPicker";
-import LineWidthPicker from "./LineWidthPicker";
 import { Eraser } from "./Eraser";
 import { useSetOptions } from "../../../../common/recoil/options";
 import { useRefs } from "../../hooks/useRefs";
 import UndoRedoButtons from "./UndoRedoButtons";
 
 export const ToolBar = () => {
-  const { canvasRef, bgRef } = useRefs();
-
   const setOptions = useSetOptions();
 
   const [showEraser, setShowEraser] = useState(false);
@@ -39,7 +36,7 @@ export const ToolBar = () => {
           className="absolute left-[670px] bottom-[69px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "white" }));
+            setOptions((prev) => ({ ...prev, lineColor: {r:255,g:255,b:255,a:1} }));
             console.log("White button clicked!");
           }}
         >
@@ -54,7 +51,7 @@ export const ToolBar = () => {
           className="absolute left-[670px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "blue" }));
+            setOptions((prev) => ({ ...prev, lineColor: {r:0,g:0,b:255,a:1}  }));
             console.log("Blue button clicked!");
           }}
         >
@@ -69,7 +66,7 @@ export const ToolBar = () => {
           className="absolute left-[709.6px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "black" }));
+            setOptions((prev) => ({ ...prev, lineColor: {r:0,g:0,b:0,a:1}  }));
             console.log("Black button clicked!");
           }}
         >
@@ -89,7 +86,7 @@ export const ToolBar = () => {
           className="absolute left-[630px] bottom-[18px] bg-inherit z-[4]"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "yellow" }));
+            setOptions((prev) => ({ ...prev, lineColor: {r:255,g:255,b:0,a:1} }));
             console.log("Yellow button clicked!");
           }}
         >
@@ -104,7 +101,7 @@ export const ToolBar = () => {
           className="absolute left-[710px] bottom-[69px] bg-inherit z-[4] hover:scale-125"
           onClick={() => {
             // Add your button click logic here
-            setOptions((prev) => ({ ...prev, lineColor: "red" }));
+            setOptions((prev) => ({ ...prev, lineColor: {r:255,g:0,b:0,a:1} }));
             console.log("Red button clicked!");
           }}
         >

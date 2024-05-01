@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useOptionsValue } from "../../../common/recoil/options";
-import { useCtx } from "./useCtx";
-import { useRefs } from "./useRefs";
 import { socket } from "../../../common/lib/socket";
+import { useRefs } from "./useRefs";
+import { useCtx } from "./useCtx";
+import { DEFAULT_MOVE } from "../../../common/constants/defaultMove";
 
 export const useSelection = (drawAllMoves: () => Promise<void>) => {
   const ctx = useCtx();
@@ -59,30 +60,20 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
           });
         }
       }
-      if(e.key === 'Delete' && selection){
-        const move: Move ={
-          circle:{
-            cX: 0,
-            cY:0,
-            radiusX:0,
-            radiusY:0
-          },
-          rect:{
-            fill:true,
+      if (e.key === "Delete" && selection) {
+        const move: Move = {
+          ...DEFAULT_MOVE,
+          rect: {
             width,
-            height
+            height,
           },
-          path: [[x,y]],
+          path: [[x, y]],
           options: {
             ...options,
             shape: "rect",
             mode: "eraser",
+            fillColor: { r: 0, g: 0, b: 0, a: 0 },
           },
-          id:"",
-          img: {
-            base64:"",
-          },
-          timestamp:0,
         };
         socket.emit("draw", move);
       }
